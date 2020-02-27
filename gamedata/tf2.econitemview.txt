@@ -1,0 +1,74 @@
+"Games"
+{
+	"tf"
+	{
+		"Signatures"
+		{
+			"CTFPlayer::GetLoadoutItem"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CTFPlayer14GetLoadoutItemEiib"
+				"windows"	"\x55\x8B\xEC\x51\x53\x56\x8B\xF1\x8B\x0D\x2A\x2A\x2A\x2A\x57\x89\x75\xFC"
+			}
+			"CTFPlayer::GetEntityForLoadoutSlot"
+			{
+				"library"	"server"
+				"linux"		"@_ZN9CTFPlayer23GetEntityForLoadoutSlotEib"
+				"windows"	"\x55\x8B\xEC\x51\x53\x8B\x5D\x08\x57\x8B\xF9\x89\x7D\xFC\x83\xFB\x07"
+			}
+		}
+		"Functions"
+		{
+			"CTFPlayer::GetLoadoutItem"
+			{
+				"signature"	"CTFPlayer::GetLoadoutItem"
+				"callconv"	"thiscall"
+				"return"	"int"
+				"this"		"entity"
+				"arguments"
+				{
+					"class"
+					{
+						"type"	"int"
+					}
+					"slot"
+					{
+						"type"	"int"
+					}
+					"b"
+					{
+						"type"	"bool"
+					}
+				}
+			}
+		}
+		"Offsets"
+		{
+			"CTFPlayer::GiveNamedItem"
+			{
+				"windows"	"475"
+				"linux"	"482"
+			}
+			"CEconItemView::GetCustomName"
+			{
+				"windows" "16"
+				"linux" "17"
+			}
+			"CBaseEntity::GetBaseEntity"
+			{
+				"windows" "5"
+				"linux" "6"
+			}
+			"CBasePlayer::EquipWearable"
+			{
+				"linux"		"431"
+				"windows"	"430"
+			}
+			"CBasePlayer::RemoveWearable"
+			{
+				"linux"		"432"
+				"windows"	"431"
+			}
+		}
+	}
+}
