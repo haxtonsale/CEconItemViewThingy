@@ -42,6 +42,7 @@ public void OnPluginStart()
 	
 	RegAdminCmd("sm_test", Command_Test, ADMFLAG_BAN); // Prints loadout item data
 	RegAdminCmd("sm_test2", Command_Test2, ADMFLAG_BAN); // Equips all other players with caller's melee weapon
+	RegAdminCmd("sm_test3", Command_Test3, ADMFLAG_BAN); // Removes all client's weapons
 	
 	GameData hGameData = new GameData("tf2.econitemview");
 	if (!hGameData)
@@ -275,22 +276,18 @@ bool CreateAndEquipItem(int iClient, char[] sClassname, CEconItemView Item, int 
 
 void RemoveWeaponSlot(int iClient, int iSlot)
 {
-	if (iSlot <= 6)
+	int iEnt = GetEntityForLoadoutSlot(iClient, iSlot);
+	if (iEnt != -1)
 	{
-		int iEnt = GetEntityForLoadoutSlot(iClient, iSlot);
+		int iExtraWearable = GetEntPropEnt(iEnt, Prop_Send, "m_hExtraWearable");
+		if (iExtraWearable != -1)
+			RemoveWearable(iClient, iExtraWearable);
 		
-		if (iEnt != -1)
-		{
-			int iExtraWearable = GetEntPropEnt(iEnt, Prop_Send, "m_hExtraWearable");
-			if (iExtraWearable != -1)
-				TF2_RemoveWearable(iClient, iExtraWearable);
-			
-			iExtraWearable = GetEntPropEnt(iEnt, Prop_Send, "m_hExtraWearableViewModel");
-			if (iExtraWearable != -1)
-				RemoveWearable(iClient, iExtraWearable);
-			
-			AcceptEntityInput(iEnt, "Kill");
-		}
+		iExtraWearable = GetEntPropEnt(iEnt, Prop_Send, "m_hExtraWearableViewModel");
+		if (iExtraWearable != -1)
+			RemoveWearable(iClient, iExtraWearable);
+		
+		AcceptEntityInput(iEnt, "Kill");
 	}
 }
 
@@ -305,22 +302,19 @@ void RemoveAllWeapons(int iClient)
 	{
 		char sClass[64];
 		GetEntityClassname(iAction, sClass, sizeof(sClass));
-		if (StrContains(sClass, "tf_weapon"))
+		if (StrContains(sClass, "tf_weapon") != -1)
 			RemoveWeaponSlot(iClient, 9);
 	}
 }
 
 void RemoveWearableSlot(int iClient, int iSlot)
 {
-	if (iSlot >= 7 && iSlot <= 10)
+	int iEnt = GetEntityForLoadoutSlot(iClient, iSlot);
+	
+	if (iEnt != -1)
 	{
-		int iEnt = GetEntityForLoadoutSlot(iClient, iSlot);
-		
-		if (iEnt != -1)
-		{
-			RemoveWearable(iClient, iEnt);
-			AcceptEntityInput(iEnt, "Kill");
-		}
+		RemoveWearable(iClient, iEnt);
+		AcceptEntityInput(iEnt, "Kill");
 	}
 }
 
@@ -361,5 +355,11 @@ public Action Command_Test2(int iClient, int iArgs)
 				EquipPlayerWeapon(i, GetBaseEntity(ptr));
 		}
 	}
+	return Plugin_Handled;
+}
+
+public Action Command_Test3(int iClient, int iArgs)
+{
+	RemoveAllWeapons(iClient);
 	return Plugin_Handled;
 }
